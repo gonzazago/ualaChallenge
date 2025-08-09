@@ -57,7 +57,7 @@ Abre una terminal en el directorio raíz.
 
 #### Ejecuta el siguiente comando:
 
-```
+```shell
 make run-all
 ```
 
@@ -71,7 +71,7 @@ Gateway en el puerto 8000.
 
 Para detener y eliminar todos los contenedores, ejecuta:
 
-```
+```shell
  make stop-all
 ```
 
@@ -82,13 +82,13 @@ El proyecto incluye una suite de tests unitarios
 Ejecutar los Tests
 Para correr los tests de un servicio específico, navega a su directorio y ejecuta:
 
-```
+```shell
 go test ./...
 ```
 
 # 4. Posmtman collection
 
-```
+```json
 {
     "info": {
         "_postman_id": "da86b199-00a4-47b3-9664-8ac780fbcc78",
