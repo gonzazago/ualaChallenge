@@ -15,7 +15,8 @@ robusto ecosistema para el desarrollo de APIs.
 
 ## Diagrama de Arquitectura
 
-[Aquí puedes insertar la imagen de tu diagrama de arquitectura]
+<img width="5276" height="3224" alt="image" src="https://github.com/user-attachments/assets/6ac1f8c9-4794-424d-8e8b-703b316929bf" />
+
 
 ### Descripción de los Servicios Implementados
 
