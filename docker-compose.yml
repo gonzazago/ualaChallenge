@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # API Gateway - El único punto de entrada
+  tweet-gateway:
+    build:
+      context: ./tweet-gateway
+    container_name: tweet-gateway
+    restart: always
+    ports:
+      - "8000:8000" # El único puerto expuesto al host
+    networks:
+      - microservices-net
+    depends_on:
+      - user-service
+      - follow-service
+      - post-service
+      - timeline-service
+
+  # User Service
+  user-service:
+    build:
+      context: ./user-service
+    container_name: user-service
+    restart: always
+    # El puerto 8080 solo es accesible DENTRO de la red de Docker
+    networks:
+      - microservices-net
+
+  # Follow Service
+  follow-service:
+    build:
+      context: ./follow-service
+    container_name: follow-service
+    restart: always
+    networks:
+      - microservices-net
+
+  # Post Service
+  post-service:
+    build:
+      context: ./post-service
+    container_name: post-service
+    restart: always
+    networks:
+      - microservices-net
+
+  # Timeline Service
+  timeline-service:
+    build:
+      context: ./timeline-service
+    container_name: timeline-service
+    restart: always
+    networks:
+      - microservices-net
+
+# Define la red personalizada para que los servicios puedan comunicarse
+networks:
+  microservices-net:
+    driver: bridge
