@@ -6,7 +6,7 @@ la escalabilidad y el mantenimiento.
 ## 1. Arquitectura de la Solución
 
 La plataforma se basa en una arquitectura de microservicios desacoplados, donde cada servicio tiene una única
-responsabilidad bien definida. Se ha seguido un patrón de Arquitectura Hexagonal (Puertos y Adaptadores) inspirado en
+responsabilidad bien definida. Se ha seguido un patrón de Arquitectura Hexagonal inspirado en
 los principios de Domain-Driven Design (DDD) para lograr una clara separación entre la lógica de negocio, la capa de
 aplicación y la infraestructura.
 
@@ -38,6 +38,47 @@ robusto ecosistema para el desarrollo de APIs.
 * Timeline Service: Orquesta la comunicación entre los otros servicios para construir y devolver el timeline
   personalizado de un usuario.
   * Utiliza un reddis, para obtener los feed de manera eficiente,  en este caso lo que se busca en este reddis es obtener de manera rapidad un timeline por usuario, el mismo seria actualizado como consecuencia de los post de los seguidores
+ 
+### Optimización y Escalabilidad
+
+#### Optimización para Lecturas
+* Cache de Timeline:
+  * Uso de Redis para almacenar timelines precalculados por usuario, actualizados mediante un modelo event-driven cuando se publiquen nuevos tweets o se modifiquen follows, reduciendo la latencia de lectura.
+
+#### CQRS (Command Query Responsibility Segregation):
+* Separación de la lógica de escritura (tweets, follows) de la de lectura (consulta de timeline) para optimizar cada flujo.
+
+#### Paginación y ordenación:
+* Implementación de paginación por cursores y ordenación por timestamps para minimizar payloads y consultas costosas.
+
+#### Escalabilidad
+##### Base de datos:
+
+* Tweets: Cassandra (alta performance en lecturas y escrituras, costo predecible).
+
+* Relaciones follow: Amazon Neptune (consultas rápidas en grafo).
+
+* Usuarios: MySQL con cache para lecturas frecuentes.
+
+* Eventos asíncronos:
+Uso de SNS/SQS para publicar eventos de nuevos tweets y follows, permitiendo que el timeline-service procese de forma independiente.
+
+* API Gateway:
+  * tweet-gateway como único punto de entrada, con balanceo de carga y rate limiting.
+
+* Escalabilidad horizontal:
+  * Despliegue en contenedores (Kubernetes/ECS) escalando por métricas de uso (HPA).
+
+* Tolerancia a fallos:
+  * Timeouts, reintentos y circuit breakers en llamadas entre microservicios.
+
+* Monitoreo y Observabilidad
+  * Integración con Prometheus + Grafana para métricas.
+
+  * ELK Stack o CloudWatch Logs para análisis centralizado de logs.
+
+  * Alertas automáticas ante latencias altas o errores recurrentes.
+
 # 2. Setup y Ejecución del Proyecto
 
 La solución está completamente "dockerizada", lo que permite levantar todo el stack de microservicios con un único
